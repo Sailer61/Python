@@ -1,5 +1,9 @@
 in_stock = {"coffee": 1, "milk": 2, "cream": 3}
 def order(*preferences):
+    for drink in preferences:
+        if not isinstance(drink,str): raise ValueError("исправьте входные данные в заказе")
+    for ing in in_stock:
+        if not isinstance(in_stock[ing],int): raise ValueError("исправьте входные данные в наличии")
     recipes = {
         "Эспрессо": {"coffee": 1, "milk": 0, "cream": 0},
         "Капучино": {"coffee": 1, "milk": 3, "cream": 0},
@@ -8,23 +12,22 @@ def order(*preferences):
         "Латте Макиато": {"coffee": 1, "milk": 2, "cream": 1},
         "Кон Панна": {"coffee": 1, "milk": 0, "cream": 1}
     }
-    result = []
+
     for drink in preferences:
+        result=''
         ingredients = recipes.get(drink)
         if ingredients:
             can_make = lambda x: in_stock[x] >= ingredients[x]
             if all(can_make(ing) for ing in ingredients):
                 for ing in ingredients:
                     in_stock[ing] -= ingredients[ing]
-                result.append(drink)
-                print(result)
-                result = []
-                continue
-        if not result:
-            print("К сожалению, не можем предложить Вам напиток")
+                result=drink
+                break
+    if not result:
+        print("К сожалению, не можем предложить Вам напиток")
     return result
 
-in_stock = {"coffee": 4, "milk": 4, "cream": 0}
-print(order("Эспрессо", "Капучино", "Макиато", "Кофе по-венски", "Латте Макиато", "Кон Панна"))
-in_stock = {"coffee": 2, "milk": 4, "cream": 0}
-print(order("Капучино", "Макиато", "Эспрессо"))
+in_stock = {"coffee": 1, "milk": 3, "cream": 0}
+print(order("Капучино","Эспрессо", "Макиато", "Кофе по-венски", "Латте Макиато", "Кон Панна"))
+# in_stock = {"coffee": 2, "milk": 4, "cream": 0}
+# print(order("Капучино", "Макиато", "Эспрессо"))
